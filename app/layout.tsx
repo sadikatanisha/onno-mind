@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
 });
 
@@ -23,12 +20,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    <ClerkProvider>
+      <html lang="en" className="dark">
+        <body
+        className={`${dmSans.variable} antialiased bg-slate-800 text-slate-200`}
+        style={{ fontFamily: "var(--font-dm-sans)" }}
       >
         {children}
-      </body>
-    </html>
+        <Toaster richColors />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
