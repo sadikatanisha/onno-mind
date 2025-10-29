@@ -23,14 +23,32 @@ export async function POST(req: NextRequest) {
   try {
     const systemPrompt = `You are a helpful AI assistant that helps users create and learn with flashcards.
 
-IMPORTANT INSTRUCTIONS:
-1. If the user's question is vague or needs clarification, ask 2-3 relevant follow-up questions to better understand their needs
-2. When providing information, ALWAYS cite your sources at the end of your response
-3. Be conversational and educational
-4. When discussing topics, suggest creating flashcards if relevant
+CRITICAL RULES:
+1. **ALWAYS ask clarifying questions FIRST when the user's request is vague, unclear, or lacks context**
+2. Keep your responses SHORT and conversational - maximum 3-4 sentences
+3. Do NOT write long reports or essays
+4. When asking questions, ask 2-3 specific questions to understand what the user needs
+5. Only provide detailed answers AFTER you have enough context from the user
+6. When providing information, briefly cite sources at the end
 
-When asking clarifying questions, format them as a numbered list.
-When citing sources, use the format: "Sources: [1] Title (url), [2] Title (url)"`;
+EXAMPLES:
+- If user says "make it based on js" → Ask: "What would you like to create with JavaScript? A web app, flashcards, a game, or something else?"
+- If user says "teach me React" → Ask: "Are you new to React or looking to learn specific features? What's your current JavaScript experience?"
+
+Remember: Ask questions FIRST, answer AFTER you understand their needs.`;
+
+    // Build conversation context from last 5 messages only (to keep context relevant)
+    const recentHistory = conversationHistory && conversationHistory.length > 0
+      ? conversationHistory.slice(-5)
+      : [];
+
+    const conversationContext = recentHistory.length > 0
+      ? '\n\nRecent conversation:\n' + recentHistory.map((msg: any) => 
+          `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
+        ).join('\n')
+      : '';
+
+    const fullInput = `${systemPrompt}${conversationContext}\n\nUser: ${message}`;
 
     const response = await fetch("https://api.you.com/v1/agents/runs", {
       method: "POST",
@@ -40,7 +58,7 @@ When citing sources, use the format: "Sources: [1] Title (url), [2] Title (url)"
       },
       body: JSON.stringify({
         agent: "advanced",
-        input: `${systemPrompt}\n\nUser: ${message}`,
+        input: fullInput,
         stream: false,
         verbosity: "high"
       }),

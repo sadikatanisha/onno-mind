@@ -16,9 +16,14 @@ export default function ReviewPage({ params }: { params: { deckId: string } }) {
   const fetchNext = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/stats?deckId=${params.deckId}`);
-      await res.json();
-      setCard(null);
+      const statsRes = await fetch(`/api/stats?deckId=${params.deckId}`);
+      const stats = await statsRes.json();
+      setTotal(stats.dueToday || 0);
+      
+      // Fetch the first card due for review
+      const cardRes = await fetch(`/api/review/next?deckId=${params.deckId}`);
+      const cardData = await cardRes.json();
+      setCard(cardData.card || null);
     } catch (e: any) {
       toast.error(e.message);
     } finally {

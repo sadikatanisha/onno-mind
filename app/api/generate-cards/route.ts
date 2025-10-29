@@ -32,14 +32,32 @@ export async function POST(req: NextRequest) {
     });
 
     // Create cards in database
-    await prisma.card.createMany({
-      data: cards.map((card, index) => ({
+    const createdCards = await Promise.all(
+      cards.map((card, index) =>
+        prisma.card.create({
+          data: {
+            deckId: deck.id,
+            front: card.front,
+            back: card.back,
+            codeSnippet: card.codeSnippet,
+            difficulty: card.difficulty || 3,
+            order: index,
+          },
+        })
+      )
+    );
+
+    // Create initial schedules for all cards (make them available for review immediately)
+    await prisma.schedule.createMany({
+      data: createdCards.map((card) => ({
+        cardId: card.id,
+        userId,
         deckId: deck.id,
-        front: card.front,
-        back: card.back,
-        codeSnippet: card.codeSnippet,
-        difficulty: card.difficulty || 3,
-        order: index,
+        dueAt: new Date(), // Available for review immediately
+        interval: 0,
+        ease: 2.5,
+        reps: 0,
+        lapses: 0,
       })),
     });
 
