@@ -22,24 +22,38 @@ export default async function DeckDetailPage({ params }: { params: Promise<{ dec
           initialDescription={deck.description}
         />
 
-        <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-          <h2 className="font-medium text-white mb-3">Sources</h2>
-          <ul className="space-y-2">
-            {deck.sources.map((s) => (
-              <li key={s.id}>
+        {deck.sources && deck.sources.length > 0 && (
+          <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 border border-purple-500/30 rounded-lg p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-6 w-6 rounded bg-purple-500/20 flex items-center justify-center">
+                <span className="text-sm">🌐</span>
+              </div>
+              <h2 className="font-semibold text-purple-300">Web Sources Used</h2>
+              <span className="text-xs text-purple-400/60 ml-auto">Powered by You.com</span>
+            </div>
+            <div className="grid gap-2">
+              {deck.sources.map((s) => (
                 <a 
-                  className="text-purple-400 hover:text-purple-300 text-sm underline" 
+                  key={s.id}
+                  href={s.url}
                   target="_blank" 
                   rel="noopener noreferrer"
-                  href={s.url}
+                  className="flex items-start gap-3 p-3 bg-slate-800/50 hover:bg-slate-800 rounded-lg border border-slate-700 hover:border-purple-500/50 transition-all group"
                 >
-                  {s.title}
+                  <div className="h-8 w-8 rounded bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs">🔗</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-purple-400 group-hover:text-purple-300 line-clamp-1">
+                      {s.title}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">{s.provider}</p>
+                  </div>
                 </a>
-              </li>
-            ))}
-            {deck.sources.length === 0 && <div className="text-slate-500 text-sm">No sources</div>}
-          </ul>
-        </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
           <h2 className="font-medium text-white mb-3">Cards ({deck.cards.length})</h2>

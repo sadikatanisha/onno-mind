@@ -12,7 +12,7 @@ export function LandingNavbar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500">
             <Sparkles className="h-5 w-5 text-slate-900" />
           </div>
-          <span className="text-xl font-semibold text-white">youCards</span>
+          <span className="text-xl font-semibold text-white">OnnoMind</span>
         </Link>
 
         <div className="flex items-center gap-8">

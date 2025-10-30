@@ -11,6 +11,18 @@ export default async function DecksPage() {
   const decks = await prisma.deck.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
+    include: {
+      cards: {
+        include: {
+          schedule: true,
+        },
+      },
+      conversations: {
+        where: { mode: "quiz" },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
+    },
   });
 
   const totalCards = decks.reduce((sum, deck) => sum + (deck.cardCount || 0), 0);

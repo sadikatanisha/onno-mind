@@ -40,23 +40,30 @@ export function AIMessage({ message, sources }: AIMessageProps) {
           </div>
         </Card>
         {sources && sources.length > 0 && (
-          <Card className="bg-slate-800/50 border-slate-700 rounded-lg px-4 py-3">
-            <p className="text-xs font-semibold text-slate-400 mb-2">Sources:</p>
-            <div className="space-y-1">
+          <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 rounded-lg px-4 py-3">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="h-5 w-5 rounded bg-purple-500/20 flex items-center justify-center">
+                <ExternalLink className="h-3 w-3 text-purple-400" />
+              </div>
+              <p className="text-xs font-semibold text-purple-300">📚 Sources from the web:</p>
+            </div>
+            <div className="space-y-2">
               {sources.map((source, idx) => (
                 <a
                   key={idx}
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-2 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                  className="block p-2 bg-slate-800/50 hover:bg-slate-800 rounded border border-slate-700 hover:border-purple-500/50 transition-all group"
                 >
-                  <ExternalLink className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                  <span className="line-clamp-1">{source.title}</span>
+                  <div className="flex items-start gap-2">
+                    <ExternalLink className="h-3 w-3 mt-0.5 flex-shrink-0 text-purple-400 group-hover:text-purple-300" />
+                    <span className="text-xs text-purple-400 group-hover:text-purple-300 line-clamp-2">{source.title}</span>
+                  </div>
                 </a>
               ))}
             </div>
-          </Card>
+          </div>
         )}
       </div>
     </div>

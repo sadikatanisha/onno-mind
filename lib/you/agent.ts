@@ -78,7 +78,7 @@ Requirements:
         throw new Error("Invalid API key. Please check your YOU_API_KEY configuration");
       }
       if (response.status === 404) {
-        throw new Error(`Custom agent not found. Please verify YOUR_CUSTOM_AGENT_ID (${customAgentId}) is correct at https://you.com/agents`);
+        throw new Error("Custom agent not found. Please verify YOUR_CUSTOM_AGENT_ID is correct at https://you.com/agents");
       }
       
       throw new Error(`You.com API error (${response.status}): ${errorData.error || errorData.message || 'Unknown error'}`);

@@ -11,7 +11,7 @@ const YouSearchResponseSchema = z.object({
     title: z.string(),
     snippet: z.string().optional(),
     provider: z.string().optional(),
-    metadata: z.record(z.unknown()).optional(),
+    metadata: z.record(z.string(), z.unknown()).optional(),
   }))
 });
 

@@ -30,14 +30,14 @@ export function DocumentsSidebar({ documents, onDocumentSelect, selectedDocId }:
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
             <Brain className="h-5 w-5 text-white" />
           </div>
-          <h1 className="text-lg font-bold text-slate-200">youCards</h1>
+          <h1 className="text-lg font-bold text-slate-200">OnnoMind</h1>
         </div>
         
-        <Link href="/agent">
+        <Link href="/learn">
           <Button 
             size="sm" 
             className={`w-full justify-start mb-3 ${
-              pathname === '/agent' 
+              pathname === '/learn' 
                 ? 'bg-purple-600 hover:bg-purple-700' 
                 : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
             }`}

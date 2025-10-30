@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Save, X } from "lucide-react";
+import { Pencil, Save, X, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -87,12 +87,21 @@ export function EditableDeckHeader({ deckId, initialTitle, initialDescription }:
               </div>
               {description && <p className="text-slate-400 mt-2">{description}</p>}
             </div>
-            <Link
-              href={`/review/${deckId}`}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-            >
-              Start Review
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href={`/review/${deckId}`}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center"
+              >
+                📚 Review Flashcards
+              </Link>
+              <Link
+                href={`/quiz/${deckId}`}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+              >
+                <Brain className="h-4 w-4" />
+                Start AI Quiz
+              </Link>
+            </div>
           </>
         )}
       </div>

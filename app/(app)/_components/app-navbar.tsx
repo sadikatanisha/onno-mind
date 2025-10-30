@@ -13,10 +13,9 @@ export function AppNavbar({ userName }: AppNavbarProps) {
   const pathname = usePathname();
   
   const navItems = [
-    { href: "/agent", label: "Chat" },
-    { href: "/dashboard", label: "Flashcards" },
-    { href: "/decks", label: "Dashboard" },
-    { href: "/docs", label: "Docs" },
+    { href: "/learn", label: "Learn" },
+    { href: "/decks", label: "My Decks" },
+    { href: "/dashboard", label: "Dashboard" },
   ];
 
   return (
@@ -26,7 +25,7 @@ export function AppNavbar({ userName }: AppNavbarProps) {
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500">
             <Sparkles className="h-6 w-6 text-slate-900" />
           </div>
-          <span className="text-xl font-semibold">youCards</span>
+          <span className="text-xl font-semibold">OnnoMind</span>
         </Link>
         
         <div className="flex items-center gap-8">
