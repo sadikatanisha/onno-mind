@@ -12,13 +12,44 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "deckId required" }, { status: 400 });
     }
 
-    const card = await prisma.card.findFirst({
+    let card = await prisma.card.findFirst({
       where: {
         deckId,
         schedule: { is: { userId, dueAt: { lte: new Date() } } },
       },
       orderBy: { schedule: { dueAt: "asc" } },
     });
+
+    // If no card found with schedule, create schedules for cards that don't have them
+    if (!card) {
+      const cardsWithoutSchedule = await prisma.card.findMany({
+        where: { deckId, schedule: { is: null } },
+      });
+
+      if (cardsWithoutSchedule.length > 0) {
+        await prisma.schedule.createMany({
+          data: cardsWithoutSchedule.map((c) => ({
+            cardId: c.id,
+            userId,
+            deckId,
+            dueAt: new Date(),
+            interval: 0,
+            ease: 2.5,
+            reps: 0,
+            lapses: 0,
+          })),
+        });
+
+        // Fetch again after creating schedules
+        card = await prisma.card.findFirst({
+          where: {
+            deckId,
+            schedule: { is: { userId, dueAt: { lte: new Date() } } },
+          },
+          orderBy: { schedule: { dueAt: "asc" } },
+        });
+      }
+    }
 
     return NextResponse.json({ card });
   } catch (err: any) {

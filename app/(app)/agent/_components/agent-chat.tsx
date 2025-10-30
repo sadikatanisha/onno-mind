@@ -106,7 +106,15 @@ export function AgentChat({ deckTitle, userImage, userName }: AgentChatProps) {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || "Failed to generate cards");
+        if (data.needsCredits) {
+          toast.error(data.error, {
+            description: "Add credits at you.com/billing to continue",
+            duration: 5000,
+          });
+        } else {
+          throw new Error(data.error || "Failed to generate cards");
+        }
+        return;
       }
 
       toast.success(`Generated ${data.cardCount} flashcards!`);

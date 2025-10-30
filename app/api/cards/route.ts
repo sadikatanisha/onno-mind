@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       throw new Error("Not found");
     }
 
-    const created = await prisma.$transaction(async (tx: typeof prisma) => {
+    const created = await prisma.$transaction(async (tx) => {
       const cardRows = await Promise.all(
         cards.map((c) =>
           tx.card.create({

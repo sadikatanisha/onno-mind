@@ -116,12 +116,12 @@ export function CardList({ initialCards, deckId }: CardListProps) {
           ) : (
             <div className="space-y-2">
               <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="font-medium text-white">{card.front}</div>
-                  <div className="text-sm text-slate-400 mt-1">{card.back}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-white break-words">{card.front}</div>
+                  <div className="text-sm text-slate-400 mt-1 break-words">{card.back}</div>
                   {card.codeSnippet && (
-                    <pre className="mt-2 bg-slate-900 border border-slate-600 rounded p-2 text-xs text-purple-300 overflow-x-auto">
-                      {card.codeSnippet}
+                    <pre className="mt-2 bg-slate-900 border border-slate-600 rounded p-2 text-xs text-purple-300 overflow-x-auto max-w-full">
+                      <code className="break-words whitespace-pre-wrap">{card.codeSnippet}</code>
                     </pre>
                   )}
                 </div>

@@ -27,20 +27,27 @@ export async function generateFlashcards(args: {
   }
 
   try {
-    const systemPrompt = `You are a flashcard generator. You MUST respond with ONLY a valid JSON array. No explanations, no markdown formatting, no text before or after the JSON.`;
-    
-    const prompt = `Create 5-10 flashcards about: ${args.topic}
+    const systemPrompt = `You are an expert flashcard generator. Output ONLY valid JSON arrays.
+
+RULES:
+- Return ONLY a JSON array, nothing else
+- Each object must have: front, back, difficulty
+- Optionally add codeSnippet for programming topics
+- No markdown, no explanations, no text outside JSON
+- Ensure proper JSON escaping`;
+
+    const prompt = `Create 5-10 educational flashcards about: ${args.topic}
 
 ${args.summary ? `Context: ${args.summary}` : ''}
 
-Return as a JSON array with this structure:
-[{"front":"question","back":"answer","difficulty":3}]
+Output format:
+[{"front":"question","back":"answer","difficulty":3,"codeSnippet":"optional"}]
 
-Rules:
-- front: short question or term
-- back: clear answer (max 2 sentences)
-- difficulty: number 1-5
-- Only add codeSnippet field if topic is programming-related`;
+Requirements:
+- front: Clear question (short)
+- back: Concise answer (1-2 sentences max)
+- difficulty: 1-5 (1=easy, 5=expert)
+- codeSnippet: Only for programming topics`;
 
     const response = await fetch("https://api.you.com/v1/agents/runs", {
       method: "POST",
@@ -52,15 +59,29 @@ Rules:
         agent: "advanced",
         input: `${systemPrompt}\n\n${prompt}`,
         stream: false,
-        verbosity: "medium",
-        response_format: { type: "json_object" }
+        verbosity: "medium"
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error("You.com API Error:", response.status, errorData);
-      throw new Error(`You.com Agent API error: ${response.status} - ${JSON.stringify(errorData)}`);
+      
+      // Handle specific error cases
+      if (response.status === 402) {
+        throw new Error("No API credits available. Please add credits at https://you.com/billing");
+      }
+      if (response.status === 429) {
+        throw new Error("Rate limit exceeded. Please wait a moment or add more credits at https://you.com/billing");
+      }
+      if (response.status === 401) {
+        throw new Error("Invalid API key. Please check your YOU_API_KEY configuration");
+      }
+      if (response.status === 404) {
+        throw new Error(`Custom agent not found. Please verify YOUR_CUSTOM_AGENT_ID (${customAgentId}) is correct at https://you.com/agents`);
+      }
+      
+      throw new Error(`You.com API error (${response.status}): ${errorData.error || errorData.message || 'Unknown error'}`);
     }
 
     const data = await response.json();

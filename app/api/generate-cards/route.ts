@@ -64,6 +64,18 @@ export async function POST(req: NextRequest) {
     return Response.json({ deckId: deck.id, cardCount: cards.length });
   } catch (error: any) {
     console.error("Generate cards error:", error);
-    return Response.json({ error: error.message }, { status: 500 });
+    
+    // Determine appropriate status code
+    let statusCode = 500;
+    if (error.message?.includes("No API credits") || error.message?.includes("Rate limit")) {
+      statusCode = 402;
+    } else if (error.message?.includes("Invalid API key")) {
+      statusCode = 401;
+    }
+    
+    return Response.json({ 
+      error: error.message || "Failed to generate flashcards",
+      needsCredits: statusCode === 402
+    }, { status: statusCode });
   }
 }
