@@ -1,4 +1,4 @@
-# youCards - AI-Powered Flashcard Learning with Real-Time Citations
+# OnnoMind - AI-Powered Flashcard Learning with Real-Time Citations
 
 > **Track 2: RAG & Knowledge Mastery** - You.com API Hackathon  
 > Eliminate AI hallucinations in education through real-time source verification
